@@ -1,8 +1,28 @@
-const containerDiv = document.getElementById("container");
-const resetBtn = document.getElementById("reset");
+const etchASketchDiv = document.getElementById("etch-a-sketch");
+const changeBtn = document.getElementById("change");
+const clearBtn = document.getElementById("clear");
+changeBtn.addEventListener("click", changeSize);
+
+let mouseDown = false;
+
+window.onmousedown = () => {
+  mouseDown = true;
+  console.log(mouseDown);
+};
+
+window.onmouseup = () => {
+  mouseDown = false;
+  console.log(mouseDown);
+};
 
 let size = 100;
-resetBtn.addEventListener("click", changeSize);
+
+function clearCanvas() {
+  const gridElements = Array.from(document.getElementsByClassName("grid"));
+  gridElements.forEach((g) => {
+    g.classList.remove("hovered");
+  });
+}
 
 function changeSize() {
   let invalid = true;
@@ -12,27 +32,24 @@ function changeSize() {
       invalid = false;
     }
   }
-  const gridElements = Array.from(document.getElementsByClassName("grid"));
-  gridElements.forEach((g) => {
-    g.classList.remove("hovered");
-  });
+  clearCanvas();
   createGrid();
 }
 
 function hovered() {
-  this.classList.add("hovered");
+  if (mouseDown) {
+    this.classList.add("hovered");
+  }
 }
 
 function createGrid() {
-  containerDiv.style.setProperty("--grid-rows", size);
-  containerDiv.style.setProperty("--grid-cols", size);
+  etchASketchDiv.style.setProperty("--grid-rows", size);
+  etchASketchDiv.style.setProperty("--grid-cols", size);
   for (let i = 0; i < size * size; i++) {
     var newDiv = document.createElement("div");
     newDiv.id = i + 1;
-
-    newDiv.addEventListener("mouseleave", hovered);
-
-    containerDiv.appendChild(newDiv).className = "grid";
+    newDiv.addEventListener("mouseover", hovered);
+    etchASketchDiv.appendChild(newDiv).className = "grid";
   }
 }
 
